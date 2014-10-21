@@ -1,4 +1,4 @@
-﻿// fizzmarinerdoombomb = R, fizzmarinerdoomslow = slow buff for R 
+// fizzmarinerdoombomb = R, fizzmarinerdoomslow = slow buff for R 
 
 /**
  * IDEA - Flee mode over walls should be easy - ish, Cast E on first vector point then cast E2 on second vector point on the other side of the wall? :3
@@ -30,7 +30,6 @@ namespace Assemblies {
 
             Game.OnGameUpdate += onUpdate;
             Obj_AI_Base.OnProcessSpellCast += onSpellCast;
-            LXOrbwalker.BeforeAttack += onBeforeAttack;
             Drawing.OnDraw += onDraw;
             Game.PrintChat("[Assemblies] - Fizz Loaded.");
         }
@@ -108,6 +107,7 @@ namespace Assemblies {
                 E.Cast(position2, true);
             }
 
+
             if (E2.IsReady() && player.Distance(position2) < 10 && jumpStage == FizzJump.TRICKSTER &&
                 player.SummonerSpellbook.CanUseSpell(smite) == SpellState.Cooldown) {
                 E2.Cast(position1, true);
@@ -134,18 +134,6 @@ namespace Assemblies {
                 }
                 if (jumpStage == FizzJump.TRICKSTER && player.Spellbook.GetSpell(SpellSlot.E).Name == "fizzjumptwo") {
                     E2.Cast(target.ServerPosition, true);
-                }
-            }
-        }
-
-        private void onBeforeAttack(Obj_AI_Base unit, Obj_AI_Base target) {
-            if (unit.IsMe) {
-                switch (LXOrbwalker.CurrentMode) {
-                    case LXOrbwalker.Mode.Combo:
-                        if (W.IsReady() && target.Distance(unit) < W.Range && !target.IsMinion &&
-                            target.IsValidTarget(W.Range))
-                            W.Cast(unit, true);
-                        break;
                 }
             }
         }
@@ -399,6 +387,8 @@ namespace Assemblies {
                         R.Cast(target, true);
                     }
                 }
+                if (W.IsReady())
+                    W.Cast(); // Casts W for proc
                 if (Q.IsReady())
                     Q.CastOnUnit(target); // then Q's
             }
